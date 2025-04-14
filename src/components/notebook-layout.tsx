@@ -68,10 +68,10 @@ export default function NotebookLayout() {
   const { sourceWidth, conversationWidth, studioWidth } = getTabWidths()
 
   return (
-    <div className="flex flex-col h-screen bg-gray-200">
+    <div className="flex flex-col h-screen bg-[#edeffb]">
       <NotebookHeader />
 
-      <div className="flex flex-1 overflow-hidden bg-inherit p-2 gap-2">
+      <div className="flex flex-1 overflow-hidden bg-inherit p-4 gap-4">
         {/* Source Tab */}
         <div
           className={`bg-white rounded-lg shadow-sm flex flex-col ${
@@ -84,7 +84,7 @@ export default function NotebookLayout() {
           }}
         >
           <div className="flex items-center justify-between p-4 border-b">
-            {!collapsedTabs.source && <h2 className="text-lg font-medium">Nguồn</h2>}
+            {!collapsedTabs.source && <h2 className="text-lg font-normal">Nguồn</h2>}
             <Button variant="ghost" size="icon" className="h-8 w-8 ml-auto" onClick={() => toggleTab("source")}>
               <PanelLeft />
             </Button>
@@ -104,7 +104,7 @@ export default function NotebookLayout() {
           }}
         >
           <div className="flex items-center justify-between p-4 border-b">
-            <h2 className="text-lg font-medium h-8">Cuộc trò chuyện</h2>
+            <h2 className="text-lg font-normal h-8">Cuộc trò chuyện</h2>
           </div>
           <ConversationTab />
         </div>
@@ -121,7 +121,7 @@ export default function NotebookLayout() {
           }}
         >
           <div className="flex items-center justify-between p-4 border-b">
-            {!collapsedTabs.studio && <h2 className="text-lg font-medium">Studio</h2>}
+            {!collapsedTabs.studio && <h2 className="text-lg font-normal">Studio</h2>}
             <Button variant="ghost" size="icon" className="h-8 w-8 ml-auto" onClick={() => toggleTab("studio")}>
               <PanelRight />
             </Button>

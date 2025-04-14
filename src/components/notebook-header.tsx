@@ -16,16 +16,16 @@ import {
 
 export default function NotebookHeader() {
   return (
-    <header className="flex items-center justify-between p-4 bg-white border-b">
+    <header className="flex items-center justify-between p-4 bg-inherit border-b">
       <div className="flex items-center gap-3">
         <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center">
           <span className="text-white text-sm">N</span>
         </div>
-        <h1 className="text-xl font-medium">Untitled notebook</h1>
+        <h1 className="text-xl font-medium hover:border-1 hover:border-black">Untitled notebook</h1>
       </div>
 
       <div className="flex items-center gap-2">
-        <Button variant="ghost" size="sm" className="hidden md:flex gap-1">
+        <Button variant="ghost" size="sm" className="hidden md:flex gap-1 border-1 hover:bg-gray-200">
           <Share className="h-4 w-4" />
           <span>Chia sẻ</span>
         </Button>
@@ -33,7 +33,7 @@ export default function NotebookHeader() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             {/* <Button variant="outline">Open</Button> */}
-            <Button variant="ghost" size="sm" className="hidden md:flex gap-1">
+            <Button variant="ghost" size="sm" className="hidden md:flex gap-1 border-1 hover:bg-gray-200">
               <Settings className="h-4 w-4" />
               <span>Cài đặt</span>
             </Button>
