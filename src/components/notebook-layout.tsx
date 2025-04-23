@@ -89,7 +89,8 @@ export default function NotebookLayout() {
               <PanelLeft />
             </Button>
           </div>
-          {!collapsedTabs.source && <SourceTab />}
+          {/* {!collapsedTabs.source && <SourceTab />} */}
+          <SourceTab isCollapsed={collapsedTabs.source}/>
         </div>
 
         {/* Conversation Tab - No collapse button */}
@@ -126,7 +127,8 @@ export default function NotebookLayout() {
               <PanelRight />
             </Button>
           </div>
-          {!collapsedTabs.studio && <StudioTab />}
+          {/* {!collapsedTabs.studio && <StudioTab isCollapsed={collapsedTabs.studio}/>} */}
+          <StudioTab isCollapsed={collapsedTabs.studio}/>
         </div>
       </div>
 
