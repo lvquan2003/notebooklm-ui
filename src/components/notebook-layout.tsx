@@ -86,7 +86,7 @@ export default function NotebookLayout() {
           <div className="flex items-center justify-between p-4 border-b">
             {!collapsedTabs.source && <h2 className="text-lg font-normal">Nguồn</h2>}
             <Button variant="ghost" size="icon" className="h-8 w-8 ml-auto" onClick={() => toggleTab("source")}>
-              <PanelLeft />
+              <PanelLeft/>
             </Button>
           </div>
           {/* {!collapsedTabs.source && <SourceTab />} */}

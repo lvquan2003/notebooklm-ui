@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { ArrowUp } from "lucide-react";
+import { ArrowUp, Copy, Pin, ThumbsDown, ThumbsUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -13,80 +13,89 @@ export default function ConversationTab() {
   const [input, setInput] = useState<string>("");
   const [currentMessage, setCurrentMessage] = useState<string>("");
   const [isTyping, setIsTyping] = useState<boolean>(false);
-  const wsRef = useRef<WebSocket | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const connect = () => {
-      const ws = new WebSocket("ws://localhost:8080");
-      wsRef.current = ws;
-
-      ws.onopen = () => {
-        console.log("WebSocket connected");
-      };
-
-      ws.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        if (data.type === "message") {
-          setIsTyping(true);
-          setCurrentMessage((prev) => prev + data.content + " ");
-          if (data.isFinal) {
-            setMessages((prev) => [
-              ...prev,
-              { role: "assistant", content: currentMessage.trim() + " " + data.content },
-            ]);
-            setCurrentMessage("");
-            setIsTyping(false);
-          }
-        } else if (data.type === "error") {
-          setMessages((prev) => [
-            ...prev,
-            { role: "error", content: data.content },
-          ]);
-          setIsTyping(false);
-        }
-      };
-
-      ws.onclose = () => {
-        console.log("WebSocket disconnected, reconnecting...");
-        setTimeout(connect, 1000);
-      };
-
-      ws.onerror = (error) => {
-        console.error("WebSocket error:", error);
-        setMessages((prev) => [
-          ...prev,
-          { role: "error", content: "WebSocket connection failed" },
-        ]);
-      };
-    };
-
-    connect();
-
-    return () => {
-      wsRef.current?.close();
-    };
-  }, []);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, currentMessage]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!input.trim()) return;
 
     setMessages((prev) => [...prev, { role: "user", content: input }]);
+    setIsTyping(true);
+    setCurrentMessage("");
 
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-      wsRef.current.send(JSON.stringify({ message: input }));
-    } else {
+    try {
+      const response = await fetch("http://localhost:8080/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: input }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to connect to server");
+      }
+
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error("Failed to read response stream");
+      }
+
+      let accumulatedMessage = "";
+      const decoder = new TextDecoder();
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk.split("\n").filter((line) => line.trim());
+
+        for (const line of lines) {
+          try {
+            const data = JSON.parse(line);
+            if (data.type === "message") {
+              setCurrentMessage((prev) => prev + data.content + " ");
+              accumulatedMessage += data.content + " ";
+              if (data.isFinal) {
+                setMessages((prev) => [
+                  ...prev,
+                  { role: "assistant", content: accumulatedMessage.trim() },
+                ]);
+                setCurrentMessage("");
+                setIsTyping(false);
+              }
+            } else if (data.type === "error") {
+              setMessages((prev) => [
+                ...prev,
+                { role: "error", content: data.content },
+              ]);
+              setIsTyping(false);
+            }
+          } catch (error) {
+            console.error("Error parsing chunk:", error);
+          }
+        }
+      }
+    } catch (error) {
       setMessages((prev) => [
         ...prev,
         { role: "error", content: "Không thể kết nối tới server" },
       ]);
+      setIsTyping(false);
+      console.error("Error connect server:", error);
     }
 
     setInput("");
+  };
+
+  const handleCopy = (msg: string) => {
+    navigator.clipboard.writeText(msg).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
   };
 
   return (
@@ -108,22 +117,60 @@ export default function ConversationTab() {
                   msg.role === "user" ? "justify-end" : "justify-start"
                 }`}
               >
-                <div
-                  className={`max-w-lg p-3 rounded-lg ${
-                    msg.role === "user"
-                      ? "bg-blue-500 text-white"
-                      : msg.role === "error"
-                      ? "bg-red-200 text-red-800"
-                      : "bg-gray-200 text-gray-800"
-                  }`}
-                >
-                  {msg.content}
+                <div className="flex flex-col gap-4">
+                  <div
+                    className={`max-w-lg p-3 rounded-lg ${
+                      msg.role === "user"
+                        ? "bg-blue-400 text-white"
+                        : msg.role === "error"
+                        ? "bg-red-200 text-red-800"
+                        : "bg-gray-100 text-gray-500"
+                    }`}
+                  >
+                    {msg.content}
+                  </div>
+
+                  {msg.role !== "user" && msg.role !== "error" && (
+                    <div className="flex justify-between w-full">
+                      {
+                        <Button
+                          variant="outline"
+                          className={"rounded-full h-8 w-40"}
+                        >
+                          <Pin/>
+                          <span>Lưu vào ghi chú</span>
+                        </Button>
+                      }
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          className={"rounded-full h-8 w-8"}
+                          onClick={() => handleCopy(msg.content)}
+                          aria-label={copied ? "Đã sao chép" : "Sao chép"}
+                        >
+                          <Copy size={18} />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          className="rounded-full h-8 w-8"
+                        >
+                          <ThumbsUp />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          className="rounded-full h-8 w-8"
+                        >
+                          <ThumbsDown />
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
             {isTyping && (
               <div className="mb-4 flex justify-start">
-                <div className="max-w-lg p-3 rounded-lg bg-gray-200 text-gray-800">
+                <div className="max-w-lg p-3 rounded-lg bg-gray-100 text-gray-800">
                   {currentMessage}
                   <span className="animate-pulse">...</span>
                 </div>
@@ -152,7 +199,8 @@ export default function ConversationTab() {
           </Button>
         </div>
         <div className="text-xs text-center text-gray-500 mt-2">
-          Chatbot có thể đưa ra thông tin không chính xác; hãy kiểm tra kỹ câu trả lời mà bạn nhận được.
+          Chatbot có thể đưa ra thông tin không chính xác; hãy kiểm tra kỹ câu
+          trả lời mà bạn nhận được.
         </div>
       </div>
     </div>

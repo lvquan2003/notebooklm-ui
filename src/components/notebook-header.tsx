@@ -159,8 +159,8 @@ export default function NotebookHeader() {
 
       {/* Share Dialog */}
       <Dialog open={showAddSourceDialog} onOpenChange={setShowAddSourceDialog}>
-        <DialogContent className="sm:max-w-[700px] p-0 gap-0">
-          <DialogHeader className="p-6 pb-2 border-b-1">
+        <DialogContent className="sm:max-w-[550px] p-0 gap-0">
+          <DialogHeader className="p-6 pb-2">
             <DialogTitle className="flex items-center gap-2 mb-2">
               <div className="w-6 h-6 rounded-full flex items-center justify-center">
                 <Share2 />
@@ -173,8 +173,8 @@ export default function NotebookHeader() {
             </DialogClose>
           </DialogHeader>
 
-          <div className="py-4 px-2">
-            <Input placeholder="Thêm người dùng và nhóm*" />
+          <div className="py-4 px-2 border-y-1">
+            <Input placeholder="Thêm người dùng và nhóm*" className="h-15" />
           </div>
 
           <div className="space-y-4 px-2 mt-4">
@@ -185,12 +185,12 @@ export default function NotebookHeader() {
               <div className="flex items-center space-x-3">
                 <Avatar>
                   <AvatarImage src="/" />
-                  <AvatarFallback>NQ</AvatarFallback>
+                  <AvatarFallback>K</AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="text-sm font-medium">Nguyen Quan</p>
+                  <p className="text-sm font-medium">Kelvin</p>
                   <p className="text-xs text-muted-foreground">
-                    levan@gmail...
+                    kelvin@gmail...
                   </p>
                 </div>
               </div>
