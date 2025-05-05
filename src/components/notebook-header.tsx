@@ -44,10 +44,14 @@ import {
 } from "@/components/ui/select";
 import { useState } from "react";
 import { Input } from "./ui/input";
+import { useTheme } from "next-themes"
 
 export default function NotebookHeader() {
   const [showAddSourceDialog, setShowAddSourceDialog] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
+
+  const { setTheme } = useTheme()
+
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText("https://example.com/resume");
@@ -61,7 +65,7 @@ export default function NotebookHeader() {
         <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center">
           <span className="text-white text-sm">NB</span>
         </div>
-        <h1 className="text-xl font-medium hover:border-1 hover:border-black hover:rounded-sm">
+        <h1 className="text-xl font-medium hover:border-1 hover:border-black hover:rounded-sm p-1">
           NotebookLM
         </h1>
       </div>
@@ -113,15 +117,15 @@ export default function NotebookHeader() {
                 </DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => {setTheme("light")}}>
                       <Sun />
                       Chế độ sáng
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => {setTheme("dark")}}>
                       <Moon />
                       Chế độ tối
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => {setTheme("system")}}>
                       <SunMoon />
                       Thiết bị
                     </DropdownMenuItem>
@@ -153,7 +157,7 @@ export default function NotebookHeader() {
 
         <Avatar className="h-8 w-8">
           <AvatarImage src="/placeholder.svg?height=32&width=32" alt="User" />
-          <AvatarFallback>S</AvatarFallback>
+          <AvatarFallback className="bg-gray-300">S</AvatarFallback>
         </Avatar>
       </div>
 

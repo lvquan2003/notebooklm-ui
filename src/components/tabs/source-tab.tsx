@@ -22,15 +22,17 @@ export default function SourceTab({ isCollapsed }: SourceTabProps) {
   return (
     <div className="h-full flex flex-col overflow-auto">
       {isCollapsed ? (
-        <div
-          className="mx-auto my-4"
-          onClick={() => setShowAddSourceDialog(true)}
-        >
+        <div className="flex flex-col mx-auto my-4 gap-4">
+          <div
+            className=""
+            onClick={() => setShowAddSourceDialog(true)}
+          >
           <Plus
             strokeWidth={1.5}
-            className="hover:bg-gray-300 hover:rounded-full"
+            className="hover:bg-gray-300 hover:rounded-full p-1"
           />
-        </div>
+          </div>          
+      </div>
       ) : (
         <>
           {/* All parts that render when !isCollapsed */}

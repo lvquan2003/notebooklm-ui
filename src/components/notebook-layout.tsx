@@ -6,7 +6,7 @@ import SourceTab from "./tabs/source-tab"
 import ConversationTab from "./tabs/conversation-tab"
 import StudioTab from "./tabs/studio-tab"
 import { Button } from "@/components/ui/button"
-import { PanelLeft, PanelRight } from "lucide-react"
+import { PanelLeft, PanelRight, RotateCw } from "lucide-react"
 
 export default function NotebookLayout() {
   const [activeTab, setActiveTab] = useState<"source" | "conversation" | "studio">("conversation")
@@ -68,13 +68,14 @@ export default function NotebookLayout() {
   const { sourceWidth, conversationWidth, studioWidth } = getTabWidths()
 
   return (
-    <div className="flex flex-col h-screen bg-[#edeffb]">
+    <div className="flex flex-col h-screen bg-[#edeffb] dark:bg-[#37383B]">
+
       <NotebookHeader />
 
       <div className="flex flex-1 overflow-hidden bg-inherit p-4 gap-4">
         {/* Source Tab */}
         <div
-          className={`bg-white rounded-lg shadow-sm flex flex-col ${
+          className={`bg-white dark:bg-[#22262B] rounded-lg shadow-sm flex flex-col ${
             activeTab === "source" ? "block" : "hidden md:flex"
           }`}
           style={{
@@ -95,7 +96,7 @@ export default function NotebookLayout() {
 
         {/* Conversation Tab - No collapse button */}
         <div
-          className={`bg-white rounded-lg shadow-sm flex flex-col ${
+          className={`bg-white dark:bg-[#22262B] rounded-lg shadow-sm flex flex-col ${
             activeTab === "conversation" ? "block" : "hidden md:flex"
           }`}
           style={{
@@ -106,13 +107,21 @@ export default function NotebookLayout() {
         >
           <div className="flex items-center justify-between p-4 border-b">
             <h2 className="text-lg font-normal h-8">Cuộc trò chuyện</h2>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-1 border-1 hover:bg-gray-300 flex items-center"
+            >
+              <RotateCw />
+              <span>Làm mới</span>
+            </Button>
           </div>
           <ConversationTab />
         </div>
 
         {/* Studio Tab */}
         <div
-          className={`bg-white rounded-lg shadow-sm flex flex-col ${
+          className={`bg-white dark:bg-[#22262B] rounded-lg shadow-sm flex flex-col ${
             activeTab === "studio" ? "block" : "hidden md:flex"
           }`}
           style={{
@@ -133,7 +142,7 @@ export default function NotebookLayout() {
       </div>
 
       {/* Mobile tab switcher */}
-      <div className="md:hidden flex border-t bg-white">
+      <div className="md:hidden flex border-t bg-white dark:bg-[#37383B]">
         <button
           className={`flex-1 p-3 text-center ${activeTab === "source" ? "bg-accent/20" : ""}`}
           onClick={() => setActiveTab("source")}

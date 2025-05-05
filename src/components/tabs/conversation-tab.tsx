@@ -14,7 +14,8 @@ export default function ConversationTab() {
   const [currentMessage, setCurrentMessage] = useState<string>("");
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
-  const [copied, setCopied] = useState(false);
+  // const [copied, setCopied] = useState(false);
+  const [copiedStates, setCopiedStates] = useState<{ [key: number]: boolean }>({});
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -91,10 +92,23 @@ export default function ConversationTab() {
     setInput("");
   };
 
-  const handleCopy = (msg: string) => {
-    navigator.clipboard.writeText(msg).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+  // Function to handle copying a specific message
+  const handleCopy = (content: string, index: number) => {
+    navigator.clipboard.writeText(content).then(() => {
+      // Update the copied state for the specific index
+      setCopiedStates((prev) => ({
+        ...prev,
+        [index]: true,
+      }));
+      // Reset the copied state after a short delay (e.g., 2 seconds)
+      setTimeout(() => {
+        setCopiedStates((prev) => ({
+          ...prev,
+          [index]: false,
+        }));
+      }, 2000);
+    }).catch((err) => {
+      console.error("Failed to copy text: ", err);
     });
   };
 
@@ -121,10 +135,10 @@ export default function ConversationTab() {
                   <div
                     className={`max-w-lg p-3 rounded-lg ${
                       msg.role === "user"
-                        ? "bg-blue-400 text-white"
+                        ? "bg-gray-400 dark:bg-gray-600 text-white"
                         : msg.role === "error"
                         ? "bg-red-200 text-red-800"
-                        : "bg-gray-100 text-gray-500"
+                        : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-300"
                     }`}
                   >
                     {msg.content}
@@ -135,7 +149,7 @@ export default function ConversationTab() {
                       {
                         <Button
                           variant="outline"
-                          className={"rounded-full h-8 w-40"}
+                          className={"rounded-full h-8 w-40 bg-gray-100 hover:bg-gray-300"}
                         >
                           <Pin/>
                           <span>Lưu vào ghi chú</span>
@@ -144,21 +158,21 @@ export default function ConversationTab() {
                       <div className="flex gap-2">
                         <Button
                           variant="outline"
-                          className={"rounded-full h-8 w-8"}
-                          onClick={() => handleCopy(msg.content)}
-                          aria-label={copied ? "Đã sao chép" : "Sao chép"}
+                          className={`rounded-full ${copiedStates[index] ? "" : "w-8"} h-8 bg-gray-100 hover:bg-gray-300`}
+                          onClick={() => handleCopy(msg.content, index)}
+                          aria-label={copiedStates[index] ? "Đã sao chép" : "Sao chép"}
                         >
-                          <Copy size={18} />
+                          {copiedStates[index] ? "Đã sao chép!" : <Copy size={18} />}
                         </Button>
                         <Button
                           variant="outline"
-                          className="rounded-full h-8 w-8"
+                          className="rounded-full h-8 w-8 bg-gray-100 hover:bg-gray-300"
                         >
                           <ThumbsUp />
                         </Button>
                         <Button
                           variant="outline"
-                          className="rounded-full h-8 w-8"
+                          className="rounded-full h-8 w-8 bg-gray-100 hover:bg-gray-300"
                         >
                           <ThumbsDown />
                         </Button>
@@ -170,7 +184,7 @@ export default function ConversationTab() {
             ))}
             {isTyping && (
               <div className="mb-4 flex justify-start">
-                <div className="max-w-lg p-3 rounded-lg bg-gray-100 text-gray-800">
+                <div className="max-w-lg p-3 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-300">
                   {currentMessage}
                   <span className="animate-pulse">...</span>
                 </div>
@@ -192,7 +206,7 @@ export default function ConversationTab() {
           />
           <Button
             size="icon"
-            className="absolute right-1 top-1 h-7 w-7 rounded-full bg-blue-500 text-white"
+            className="absolute right-1 top-1 h-7 w-7 rounded-full bg-gray-500 text-white"
             onClick={handleSendMessage}
           >
             <ArrowUp className="h-4 w-4" />

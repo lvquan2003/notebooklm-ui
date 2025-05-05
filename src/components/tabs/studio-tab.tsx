@@ -30,10 +30,6 @@ const notes = [
     id: 2,
     content: "Ghi chú mới 2"
   },
-  {
-    id: 3,
-    content: "Ghi chú mới 3"
-  },
 ]
 
 export default function StudioTab({ isCollapsed }: StudioTabProps) {
@@ -79,13 +75,13 @@ export default function StudioTab({ isCollapsed }: StudioTabProps) {
         <div className="w-full flex justify-center" onClick={() => {}}>
           <Plus
             strokeWidth={1.5}
-            className="hover:bg-gray-300 hover:rounded-full"
+            className="hover:bg-gray-300 hover:rounded-full p-1"
           />
         </div>
       ) : (
         <>
           {/* All parts that render when !isCollapsed */}
-          <Card className="mb-6 border rounded-xl shadow-sm">
+          <Card className="mb-6 border rounded-xl shadow-sm bg-inherit">
             <CardContent className="p-4">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-gray-100 rounded-md flex items-center justify-center">
@@ -102,11 +98,11 @@ export default function StudioTab({ isCollapsed }: StudioTabProps) {
               {isExposed ? (
                 <div className="flex items-center justify-end gap-2 mt-4">
                   {hideAPI ? (
-                    <div className="px-4 w-full bg-gray-100 rounded-md text-lg text-gray-800 mr-auto">
+                    <div className="px-4 w-full bg-gray-100 dark:bg-inherit dark:text-white dark:border-1 rounded-md text-lg text-gray-800 mr-auto">
                       * * *
                     </div>
                   ) : (
-                    <div className="flex-1 p-2 bg-gray-100 rounded-lg text-sm text-gray-800 truncate">
+                    <div className="flex-1 p-2 bg-gray-100 dark:bg-inherit dark:text-white dark:border-1 rounded-lg text-sm text-gray-800 truncate">
                       {apiKey}
                     </div>
                   )}
@@ -158,7 +154,7 @@ export default function StudioTab({ isCollapsed }: StudioTabProps) {
                     Hủy
                   </Button> */}
                   <Button
-                    className="flex-1 rounded-full bg-gray-200 text-gray-800 hover:bg-gray-300"
+                    className="flex-1 rounded-full bg-gray-200 dark:bg-blue-600 text-gray-800 dark:text-white hover:bg-gray-300"
                     onClick={handleExpose}
                     aria-label="Hiển thị khóa API"
                   >
@@ -169,7 +165,7 @@ export default function StudioTab({ isCollapsed }: StudioTabProps) {
             </CardContent>
           </Card>
 
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 ">
             <div className="flex items-center gap-2">
               <h3 className="font-medium">Tổng quan bằng âm thanh</h3>
               <Button
@@ -182,7 +178,7 @@ export default function StudioTab({ isCollapsed }: StudioTabProps) {
             </div>
           </div>
 
-          <Card className="mb-6 border rounded-xl shadow-sm">
+          <Card className="mb-6 border rounded-xl shadow-sm bg-inherit">
             <CardContent className="p-4">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-gray-100 rounded-md flex items-center justify-center">
