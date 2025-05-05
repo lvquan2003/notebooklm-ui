@@ -18,6 +18,8 @@ export default function NotebookLayout() {
     studio: false,
   })
 
+  const [refresh, setRefresh] = useState(false)
+
   const toggleTab = (tab: "source" | "studio") => {
     setCollapsedTabs((prev) => ({
       ...prev,
@@ -111,12 +113,13 @@ export default function NotebookLayout() {
               variant="ghost"
               size="sm"
               className="gap-1 border-1 hover:bg-gray-300 flex items-center"
+              onClick={() => {setRefresh(true)}}
             >
               <RotateCw />
               <span>Làm mới</span>
             </Button>
           </div>
-          <ConversationTab />
+          <ConversationTab refresh={refresh} setRefresh={setRefresh}/>
         </div>
 
         {/* Studio Tab */}

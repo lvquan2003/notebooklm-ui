@@ -50,7 +50,7 @@ export default function NotebookHeader() {
   const [showAddSourceDialog, setShowAddSourceDialog] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
 
-  const { setTheme } = useTheme()
+  const { theme, setTheme } = useTheme()
 
 
   const handleCopyLink = () => {
@@ -110,10 +110,24 @@ export default function NotebookHeader() {
               </DropdownMenuItem>
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger>
-                  {/* <DropdownMenuItem> */}
-                  <Sun size={16} strokeWidth={1} className="mr-2" />
-                  Chế độ sáng
-                  {/* </DropdownMenuItem> */}
+                  {theme === "light" && (
+                    <div className="flex gap-2">
+                      <Sun size={16} strokeWidth={1}/>
+                      Chế độ sáng
+                    </div>
+                  )}
+                  {theme === "dark" && (
+                    <div className="flex gap-2">
+                      <Moon size={16} strokeWidth={1}/>
+                      Chế độ tối
+                    </div>
+                  )}
+                  {theme === "system" && (
+                    <div className="flex gap-2">
+                      <SunMoon size={16} strokeWidth={1}/>
+                      Thiết bị
+                    </div>
+                  )}
                 </DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>

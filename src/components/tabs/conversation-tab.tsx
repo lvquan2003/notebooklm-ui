@@ -8,7 +8,12 @@ interface Message {
   content: string;
 }
 
-export default function ConversationTab() {
+interface MessageListProps {
+  refresh: boolean;
+  setRefresh: (value: boolean) => void;
+}
+
+export default function ConversationTab({ refresh, setRefresh }: MessageListProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>("");
   const [currentMessage, setCurrentMessage] = useState<string>("");
@@ -112,6 +117,13 @@ export default function ConversationTab() {
     });
   };
 
+  useEffect(() => {
+    if (refresh) {
+      setMessages([]); 
+      setRefresh(false); 
+    }
+  }, [refresh, setRefresh])
+
   return (
     <div className="h-full flex flex-col overflow-auto">
       <div className="flex-1 p-4 overflow-y-auto">
@@ -206,7 +218,7 @@ export default function ConversationTab() {
           />
           <Button
             size="icon"
-            className="absolute right-1 top-1 h-7 w-7 rounded-full bg-gray-500 text-white"
+            className="absolute right-1 top-1 h-7 w-7 rounded-full bg-gray-500 dark:hover:bg-blue-600 text-white"
             onClick={handleSendMessage}
           >
             <ArrowUp className="h-4 w-4" />
